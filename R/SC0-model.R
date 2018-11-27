@@ -100,7 +100,10 @@ SC0.SC <- function(x, ...) {
   ## doing my head in atm ... could be better
   if (length(which(swap)) > 0) .vx  <- cbind(.vx0 = .vx[cbind(1:nrow(.vx), swap + 1)],
                                              .vx1 = .vx[cbind(1:nrow(.vx), (!swap) + 1)])
-  object[["topology_"]] <- split(tibble::as_tibble(.vx), as.integer(factor(oXe$object_,unique(oXe$object_))))
+  #object[["topology_"]] <- split(tibble::as_tibble(.vx), as.integer(factor(oXe$object_,unique(oXe$object_))))
+  temp <- tibble::tibble("object_" = unique (oXe$object_),
+                         "topology_" = split (tibble::as_tibble(.vx), oXe$object_))
+  object <- dplyr::left_join (object, temp, by = "object_")
   structure(list(object = object, vertex = sc_vertex(x) %>% dplyr::mutate(vertex_ = NULL)), class = c("SC0", "sc"))
 }
 sc_vertex.SC0 <- function(x, ...) {
